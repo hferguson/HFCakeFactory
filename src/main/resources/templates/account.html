@@ -1,0 +1,60 @@
+{{>header}}
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-3">
+
+        <h1 class="my-4">Manage your Account</h1>
+        
+
+      </div>
+   </div>
+      <!-- /.col-lg-3 -->
+	
+      <div class="col-lg-9">
+		<form name="signup" method="post" action="/account/addrUpdate">
+      	<input type="hidden" name="_csrf" value="{{_csrf.token}}" /> 
+      	<input type="hidden" name="accountID" value="{{user.uid}}"/>
+      	<div class="row">
+      		<div class="col-lg-9"><!--  eventually status of save goes here --></div>
+      	</div>
+      	<div class="row">
+      		<div class="col-lg-9">{{user.firstName}} {{user.lastName}} ({{user.uid}})</div>
+      	</div>
+      	
+      	<div class="row">
+      		<div class="col-lg-3"><label for="street">Street Address</label></div>
+      		<div class="col-lg-6"><input name="street" value="{{address.street}}"></div>
+      	</div>
+      	<div class="row">
+      		<div class="col-lg-3"><label for="city">City</label></div>
+      		<div class="col-lg-6"><input name="city" value="{{address.city}}"></div>
+      	</div>
+      	<div class="row">
+      		<div class="col-lg-3"><label for="stateOrProvince">State or Province</label></div>
+      		<div class="col-lg-6"><input name="stateOrProvince" value="{{address.stateOrProvince}}"></div>
+      	</div>
+      	<div class="row">
+      		<div class="col-lg-3"><label for="postalCode">Postal Code</label></div>
+      		<div class="col-lg-6"><input name="postalCode" value="{{address.postalCode}}"></div>
+      	</div>
+      	<div class="row">
+      		<div class="col-lg-9">
+      			<button type="button" class="button btn-primary signup">Update</button>
+      		</div>
+      	</div>
+      </form>
+
+		</div>
+      <!-- /.col-lg-9 -->
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+
+  {{>footer}}

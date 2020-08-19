@@ -1,0 +1,71 @@
+{{>header}}
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-12">
+
+		<div class="bg-primary row row-cf-header">
+			<div class="col-lg-2">&nbsp;</div>
+			<div class="col-lg-4">Item</div>
+			<div class="col-lg-2">Quantity</div>
+			<div class="col-lg-2">Price</div>
+			<div class="col-lg-2">Action</div>
+		</div>
+		{{#manifest}}
+		<form method="post" action="/basket/delete">
+			<input type="hidden" name="_csrf" value="{{_csrf.token}}" /> 
+        	<input type="hidden" name="sku" value="{{sku}}"/>
+	        <div class="primary-link row row-cf-manifest">
+	            <div class="col-lg-2"><img class="img-thumbnail" src="{{item.image}}"/></div>
+				<div class="col-lg-4">{{item.title}}</div>
+				<div class="col-lg-2">{{quantity}}</div>
+				<div class="col-lg-2">{{price}}</div>
+				<div class="col-lg-2">
+					<button type="button" class="removeItem btn btn-primary">Remove</button>
+				</div>
+			
+	        </div>
+        </form>
+        {{/manifest}}
+        <!-- /.row -->
+
+      </div>
+      <!-- /.col-lg-9 -->
+	  <div class="col-lg-9">
+	  	<form method="post" action="/order/complete">
+	  		<div class="bg-primary row row-cf-header">
+	  			<div class="col-lg-9">Order Information</div>
+	  		</div>
+	  		<div class="row">
+	  			<div class="col-lg-2"><label for="addr1">Street</label></div>
+	  			<div class="col-lg-7"><input name="addr1" value="{{address.street}}"/></div>
+	  		</div>
+	  		<div class="row">
+	  			<div class="col-lg-2"><label for="addr2">City</label></div>
+	  			<div class="col-lg-7"><input name="addr2" value="{{address.city}}"/></div>
+	  		</div>
+	  		<div class="row">
+	  			<div class="col-lg-2"><label for="addr2">State or Province</label></div>
+	  			<div class="col-lg-7"><input name="addr2" value="{{address.stateOrProvince}}"/></div>
+	  		</div>
+	  		<div class="row">
+	  			<div class="col-lg-2"><label for="postcode">Postal Code</label></div>
+	  			<div class="col-lg-7"><input name="postcode" value="{{address.postalCode}}"/></div>
+	  		</div>
+	  		<div class="row">
+	  			<div class="col-lg-9">
+	  				<button type="button" class="send-order btn btn-outline-primary">Complete Order</button>
+	  			</div>
+	  		</div>
+	  	</form>
+	  </div>
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+
+  {{>footer}}

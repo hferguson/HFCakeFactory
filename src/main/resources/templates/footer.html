@@ -1,0 +1,25 @@
+<!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Logged in as {{email}}</p>
+      <p class="m-0 text-center text-white">Copyright &copy; Hugh Ferguson Consulting Ltd. 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!--  all the page javascript we need -->
+	<script>
+$(document).ready(function() {
+	$("button.addToCart, button.removeItem, button.send-order, button.signup").click(function() {
+		//console.log("Add to cart button clicked");
+		$(this).closest('form').submit();
+	});
+	
+});
+</script>
+</body>
+
+</html>
