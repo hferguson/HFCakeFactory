@@ -8,11 +8,16 @@ import org.slf4j.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.stereotype.Component;
 
+import ca.hferguson.spring.OAuth2Utils;
+import ca.hferguson.spring.misc.Account;
+
+@Component
 public class UserSessionFilter implements Filter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserBasketFilter.class);
-	private static String USER_TOKEN_CLASS = "UsernamePasswordAuthenticationToken";
-	private static String ANON_TOKEN_CLASS = "AnonymousAuthenticationToken";
+	
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
@@ -25,13 +30,27 @@ public class UserSessionFilter implements Filter {
 	  String loginName = "";
 	  if (context != null) {
 		  Authentication token = context.getAuthentication();
-		  LOGGER.info("Authentication is of type {}", authTokenType(token));
-		  if (authTokenType(token).equals(ANON_TOKEN_CLASS)) 
+		  LOGGER.info("Authentication token is of type {}", authTokenType(token));
+		  if (OAuth2Utils.isAnonToken(token)) {
+			  LOGGER.info("Testing anon token");
 			  loginName = "Guest";
-		  else if (authTokenType(token).equals(USER_TOKEN_CLASS)) {
+		  } else if (OAuth2Utils.isUserToken(token)) {
+			  LOGGER.info("Testing User token");
 			  loginStatus = true;
 			  loginName = getUsername(token);
+		  } else if (OAuth2Utils.isOAuth2Token(token)) {
+			  LOGGER.info("Testing OAuth2 token");
+			  loginStatus = true;
+			  Account user = OAuth2Utils.getAccount((OAuth2AuthenticationToken)token);
+			  if (user != null) {
+				  loginStatus = true;
+				  loginName = user.getUid();
+			  }
+		  } else {
+			  LOGGER.info("Unrecognized token {}", token != null ? token.getClass().getSimpleName(): " null token");
 		  }
+	  } else {
+		  LOGGER.info("no context");
 	  }
 	  request.setAttribute("email", loginName);
 	  request.setAttribute("loginStatus", loginStatus);
@@ -46,6 +65,9 @@ public class UserSessionFilter implements Filter {
 		return token.getName();
 	}
 	private String authTokenType(Authentication token) {
-		return token.getClass().getSimpleName();
+		String retVal = null;
+		if (token != null)
+			retVal = token.getClass().getSimpleName();
+		return retVal;
 	}
 }

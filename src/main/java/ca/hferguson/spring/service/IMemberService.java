@@ -12,6 +12,7 @@ public interface IMemberService {
 
 	public Account addAccount(Account acct);
 	public Account findAccount(String uid);
+	public Address findAddress(String uid);
 	public Collection<Account> listAccounts();
 	public Address updateAddress(Address addy);
 }

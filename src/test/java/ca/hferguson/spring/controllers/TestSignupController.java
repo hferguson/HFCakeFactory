@@ -1,42 +1,71 @@
 package ca.hferguson.spring.controllers;
 
-import static org.mockito.Mockito.mock;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import org.springframework.ui.Model;
+import ca.hferguson.spring.HfCakeFactoryApplication;
 
-import ca.hferguson.spring.bean.IBasket;
-import ca.hferguson.spring.misc.RegistrationForm;
-import ca.hferguson.spring.service.IMemberService;
+import ca.hferguson.spring.bean.*;
+import ca.hferguson.spring.filter.*;
+import ca.hferguson.spring.misc.*;
+import ca.hferguson.spring.service.*;
+
+//import ca.hferguson.spring.service.MemberService;
 
 
-
+@WebMvcTest(SignupController.class)
+@ContextConfiguration(classes = HfCakeFactoryApplication.class)
 public class TestSignupController {
 
-	private SignupController controller;
-	private IBasket basket;
-	private IMemberService mService;
-	private BCryptPasswordEncoder encoder;
-	private Model model;
+	@Autowired
+    private WebApplicationContext webApplicationContext;
 	
+	@MockBean
+	Basket basket;
+	
+	@MockBean
+	CFUserDetailsService userInfoService;
+	
+	
+	@Autowired
+    MockMvc mockMvc;
+
+	
+    @MockBean
+    MemberService memberService;
+
 	@BeforeEach
-	void setup() {
-		 this.basket = mock(IBasket.class);
-		 this.mService = mock(IMemberService.class);
-	     this.model = mock(Model.class);
-	     this.encoder = mock(BCryptPasswordEncoder.class);
-	     this.controller = new SignupController(basket, mService, encoder);
+	public void setup() {
+		mockMvc = MockMvcBuilders
+            .webAppContextSetup(webApplicationContext)
+            .addFilter(new UserBasketFilter(basket), "/*")
+            .addFilter(new UserSessionFilter(), "/*")
+            .apply(springSecurity())
+            .build();
 	}
+    @Test
+    void onlyAllowsAccessForAuthenticatedUsers() throws Exception {
+        mockMvc.perform(get("/account"))
+                .andExpect(status().isFound())
+                .andExpect(header().string("Location", endsWith("/login")));
+    }
+	
 	@Test
-	public void testSignup() {
-		String userBefore = controller.getAuthenticated();
-		controller.signUp(model, createNewRegistration() );
-		String userAfter = controller.getAuthenticated();
-		log("User before: " + userBefore);
-		log("User after: " + userAfter);
+	public void testSignup() throws Exception {
+		mockMvc.perform(get("/loginsignup")).andExpect(status().isFound());
 	}
 	
 	private RegistrationForm createNewRegistration() {

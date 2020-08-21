@@ -1,16 +1,11 @@
 package ca.hferguson.spring.service;
 
 import java.util.*;
-
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-
+import org.springframework.stereotype.Component;
 import ca.hferguson.spring.misc.*;
 
-@Service
-public class MemberService implements IMemberService, UserDetailsService {
+@Component
+public class MemberService implements IMemberService {
 
 	private IAddressService addressService;
 	private IAccountService accountService;
@@ -34,10 +29,14 @@ public class MemberService implements IMemberService, UserDetailsService {
 	public Account findAccount(String uid) {
 		Account acct = accountService.findOne(uid);
 		if (acct != null)
-			acct.setAddress(addressService.findOne(uid));
+			acct.setAddress(findAddress(uid));
 		return acct;
 	}
 	
+	@Override
+	public Address findAddress(String uid) {
+		return addressService.findOne(uid);
+	}
 	@Override
 	public Collection<Account> listAccounts() {
 		Collection<Account> accounts = new ArrayList<Account>();
@@ -59,6 +58,7 @@ public class MemberService implements IMemberService, UserDetailsService {
 	public Address updateAddress(Address addy) {
 		return this.addressService.updateAddress(addy);
 	}
+	/*
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		log("UserDetailsService.loadUserByUsername called. Username " + username);
@@ -66,14 +66,12 @@ public class MemberService implements IMemberService, UserDetailsService {
 		if (uDetails == null)
 			throw new UsernameNotFoundException(
                     "User '" + username + "' not found");
-		log("retrieved username " + uDetails.getUsername());
-		log("retrieved passwd " + uDetails.getPassword());
+		//log("retrieved username " + uDetails.getUsername());
+		//log("retrieved passwd " + uDetails.getPassword());
 		return uDetails;
 		
 		
-	}
+	}*/
 	
-	private void log(String msg) {
-		System.out.println(msg);
-	}
+	
 }

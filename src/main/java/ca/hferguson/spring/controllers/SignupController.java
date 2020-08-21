@@ -24,6 +24,7 @@ public class SignupController extends BaseController {
 		this.encoder = encoder;
 	}
 	
+	
 	@GetMapping("/login")
 	public String loginPage(final Model model, HttpServletRequest request) {
 		setupModel(model, "login-signup");
