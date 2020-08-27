@@ -23,23 +23,23 @@ public class UserSessionFilter implements Filter {
 
 	  HttpServletRequest request = (HttpServletRequest) servletRequest;
 	  HttpServletResponse response = (HttpServletResponse) servletResponse;
-	  LOGGER.info("Logging Request  {} : {}", request.getMethod(), request.getRequestURI());
+	  //LOGGER.info("Logging Request  {} : {}", request.getMethod(), request.getRequestURI());
 
 	  SecurityContext context = SecurityContextHolder.getContext();
 	  boolean loginStatus = false;
 	  String loginName = "";
 	  if (context != null) {
 		  Authentication token = context.getAuthentication();
-		  LOGGER.info("Authentication token is of type {}", authTokenType(token));
+		  //LOGGER.info("Authentication token is of type {}", authTokenType(token));
 		  if (OAuth2Utils.isAnonToken(token)) {
-			  LOGGER.info("Testing anon token");
+			  //LOGGER.info("Testing anon token");
 			  loginName = "Guest";
 		  } else if (OAuth2Utils.isUserToken(token)) {
-			  LOGGER.info("Testing User token");
+			  //LOGGER.info("Testing User token");
 			  loginStatus = true;
 			  loginName = getUsername(token);
 		  } else if (OAuth2Utils.isOAuth2Token(token)) {
-			  LOGGER.info("Testing OAuth2 token");
+			  //LOGGER.info("Testing OAuth2 token");
 			  loginStatus = true;
 			  Account user = OAuth2Utils.getAccount((OAuth2AuthenticationToken)token);
 			  if (user != null) {
@@ -54,7 +54,7 @@ public class UserSessionFilter implements Filter {
 	  }
 	  request.setAttribute("email", loginName);
 	  request.setAttribute("loginStatus", loginStatus);
-	  LOGGER.info("Logged in as {}", loginName);
+	  //LOGGER.info("Logged in as {}", loginName);
 	  
 	  //call next filter in the filter chain
 	  filterChain.doFilter(request, response);
@@ -63,11 +63,5 @@ public class UserSessionFilter implements Filter {
 	
 	private String getUsername(Authentication token) {
 		return token.getName();
-	}
-	private String authTokenType(Authentication token) {
-		String retVal = null;
-		if (token != null)
-			retVal = token.getClass().getSimpleName();
-		return retVal;
 	}
 }

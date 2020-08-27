@@ -35,21 +35,37 @@
       </div>
       <!-- /.col-lg-9 -->
 	  <div class="col-lg-9">
-	  	<form method="post" action="/order/complete">
+	  	<form method="post" action="/order/payment">
+	  		<input type="hidden" name="_csrf" value="{{_csrf.token}}" /> 
 	  		<div class="bg-primary row row-cf-header">
 	  			<div class="col-lg-9">Order Information</div>
+	  		</div>
+	  		<div class="row">
+	  			<div class="col-lg-2"><label for="fname">First Name</label></div>
+	  			<div class="col-lg-7"><input name="fname" value="{{user.firstName}}"/></div>
+	  		</div>
+	  		<div class="row">
+	  			<div class="col-lg-2"><label for="lname">Last Name</label></div>
+	  			<div class="col-lg-7"><input name="lname" value="{{user.lastName}}"/></div>
+	  		</div>
+	  		<div class="row">
+	  			<div class="col-lg-2"><label for="lname">Last Name</label></div>
+	  			<div class="col-lg-7"><input name="lname" value="{{user.lastName}}"/></div>
+	  		</div><div class="row">
+	  			<div class="col-lg-2"><label for="email">Email</label></div>
+	  			<div class="col-lg-7"><input name="email" value="{{user.uid}}"/></div>
 	  		</div>
 	  		<div class="row">
 	  			<div class="col-lg-2"><label for="addr1">Street</label></div>
 	  			<div class="col-lg-7"><input name="addr1" value="{{address.street}}"/></div>
 	  		</div>
 	  		<div class="row">
-	  			<div class="col-lg-2"><label for="addr2">City</label></div>
-	  			<div class="col-lg-7"><input name="addr2" value="{{address.city}}"/></div>
+	  			<div class="col-lg-2"><label for="city">City</label></div>
+	  			<div class="col-lg-7"><input name="city" value="{{address.city}}"/></div>
 	  		</div>
 	  		<div class="row">
-	  			<div class="col-lg-2"><label for="addr2">State or Province</label></div>
-	  			<div class="col-lg-7"><input name="addr2" value="{{address.stateOrProvince}}"/></div>
+	  			<div class="col-lg-2"><label for="stateProv">State or Province</label></div>
+	  			<div class="col-lg-7"><input name="stateProv" value="{{address.stateOrProvince}}"/></div>
 	  		</div>
 	  		<div class="row">
 	  			<div class="col-lg-2"><label for="postcode">Postal Code</label></div>

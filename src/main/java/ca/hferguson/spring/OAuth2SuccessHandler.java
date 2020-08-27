@@ -27,6 +27,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		OAuth2AuthenticationToken oToken;
+		LOGGER.info("OnAuthenticationSuccess called");
 		if (authentication instanceof OAuth2AuthenticationToken) {
 			oToken = (OAuth2AuthenticationToken)authentication;
 			String fullName = oToken.getPrincipal().getAttribute(ATTR_NAME);

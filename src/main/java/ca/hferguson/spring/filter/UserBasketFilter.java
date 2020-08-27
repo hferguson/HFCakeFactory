@@ -23,12 +23,12 @@ public class UserBasketFilter implements Filter {
 
 	  HttpServletRequest request = (HttpServletRequest) servletRequest;
 	  HttpServletResponse response = (HttpServletResponse) servletResponse;
-	  LOGGER.info("Logging Request  {} : {}", request.getMethod(), request.getRequestURI());
+	  //LOGGER.info("Logging Request  {} : {}", request.getMethod(), request.getRequestURI());
 	  
 	  request.setAttribute("basketTotal", basket.getItemsInBasket());
 	  request.setAttribute("basketPrice", basket.getCartTotal());
 	  
-	  LOGGER.info("basketTotal set to {}", basket.getItemsInBasket());
+	  //LOGGER.info("basketTotal set to {}", basket.getItemsInBasket());
 	  
 	  //call next filter in the filter chain
 	  filterChain.doFilter(request, response);

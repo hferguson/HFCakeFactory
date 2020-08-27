@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class Order {
+public class DomainOrder {
 
 	//private final int id;
 	private final List<String> items;

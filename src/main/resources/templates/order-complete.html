@@ -8,10 +8,22 @@
       <div class="col-lg-9">
 		<div class="row">
 		<div class="col-lg-9"><h1 class="my-4">Your order has been received</h1></div>
-        
+        </div>
+        <div class="row">
+			<div class="col-lg-2">Order Status</div>
+			<div class="col-lg-1">{{orderInfo.status}}</div>
+		</div>
         <div class="row">
 			<div class="col-lg-2">Order Code</div>
-			<div class="col-lg-1">{{orderID}}</div>
+			<div class="col-lg-1">{{orderInfo.orderID}}</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-2">Order Date</div>
+			<div class="col-lg-1">{{orderInfo.paymentDate}}</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-2">Customer email</div>
+			<div class="col-lg-1">{{orderInfo.payerEmail}}</div>
 		</div>
       </div>
     

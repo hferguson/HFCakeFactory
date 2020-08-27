@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +22,7 @@ import org.springframework.util.MultiValueMap;
 
 import ca.hferguson.spring.OAuth2Utils;
 import ca.hferguson.spring.bean.*;
+import ca.hferguson.spring.filter.UserBasketFilter;
 import ca.hferguson.spring.misc.Account;
 import ca.hferguson.spring.misc.Address;
 import ca.hferguson.spring.misc.NavLink;
@@ -25,7 +30,8 @@ import ca.hferguson.spring.service.*;
 
 @Controller
 public class BaseController {
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserBasketFilter.class);
+	boolean debug = false;
 	IBasket shoppingCart;
 	IMemberService memberService;
 	
@@ -90,12 +96,13 @@ public class BaseController {
 			addy = new Address(user.getUid(), "", "", "", "");
 		return addy;
 	}
+	
 	protected Account getUserFromToken() {
 		Account user = null;
 		SecurityContext context = SecurityContextHolder.getContext();
 		if (context != null) {
 			Authentication token = context.getAuthentication();
-			log("authenticated " + String.valueOf(token.isAuthenticated()));
+			//log("authenticated " + String.valueOf(token.isAuthenticated()));
 			if (OAuth2Utils.isUserToken(token)) {
 				user = memberService.findAccount(token.getName());
 			} else if (OAuth2Utils.isOAuth2Token(token)) {
@@ -117,6 +124,7 @@ public class BaseController {
 		return retVal;
 	}
 	
+	// Added for M5
 	protected boolean isOAuth2Token(Authentication token) {
 		return (token instanceof OAuth2AuthenticationToken);
 	}
@@ -127,19 +135,35 @@ public class BaseController {
 			Authentication authentication =
 			    new UsernamePasswordAuthenticationToken(username, passwd, List.of(new SimpleGrantedAuthority("ROLE_USER"))); 
 			context.setAuthentication(authentication);
-			log(String.format("Setting user as authenticated. User %s, passwd %s", username, passwd));
+			//log(String.format("Setting user as authenticated. User %s, passwd %s", username, passwd));
 			SecurityContextHolder.setContext(context);
 		} catch (Exception e) {
 			error("Exception caught while setting user auth context");
 			e.printStackTrace();
 		}
 	}
+	
+	// For M6 - need this function to give PayPal forwarding URL
+	// Added a lot of extra checks so this will survive tests.
+	// Mock request is null or at least its components are
+	protected String getBaseUrl(HttpServletRequest request) {
+		String retVal = "";
+		if (request != null && request.getRequestURL() != null) {
+			StringBuffer url = request.getRequestURL();
+			String uri = request.getRequestURI();
+			
+			retVal = url.substring(0, url.length() - uri.length());
+		}
+		
+		return retVal;
+	}
+	
 	protected void log(String msg) {
-		System.out.println(msg);
+		LOGGER.info(msg);
 	}
 	
 	protected void error(String msg) {
-		System.err.println(msg);
+		LOGGER.error(msg);
 	}
 	
 	protected void debugFormData(MultiValueMap<String,String> map) {

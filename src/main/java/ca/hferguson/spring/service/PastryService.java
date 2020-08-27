@@ -3,6 +3,8 @@ package ca.hferguson.spring.service;
 import java.util.Optional;
 import java.util.stream.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import ca.hferguson.spring.bean.Item;
@@ -11,8 +13,10 @@ import ca.hferguson.spring.persistence.PastryRepository;
 
 
 @Service
+@Component
 public class PastryService implements IPastryService {
 
+	@Autowired
 	PastryRepository repository;
 	
 	public PastryService(PastryRepository repo) {

@@ -129,11 +129,15 @@ public class Basket implements IBasket {
 	}
 	@Override
 	public BigDecimal getCartTotal() {
+		return getSumOfEntries(this.cartInventory());
+	}
+	
+	public static BigDecimal getSumOfEntries(List<BasketEntry> entries) {
 		BigDecimal total = new BigDecimal(0);
-		List<BasketEntry>  entries = cartInventory();
 		for (int i=0;i<entries.size();i++) {
 			total = total.add(entries.get(i).getPrice());
 		}
 		return total;
 	}
+	
 }
