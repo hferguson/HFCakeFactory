@@ -1,6 +1,6 @@
 package ca.hferguson.spring.misc;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
 public class Account {
